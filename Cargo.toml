@@ -1,0 +1,16 @@
+[package]
+name = "uz_arr"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sea-orm = { version = "0.7.1", features = [ "sqlx-postgres", "runtime-tokio-native-tls", "macros" ] }
+axum = "0.5.1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.11.10", features =["json"]}
+config = {version ="0.13.1", features =["toml"]}
+serde = "1.0.136"
+serde_json = "1.0.79"
+axum-macros ="0.2.0"

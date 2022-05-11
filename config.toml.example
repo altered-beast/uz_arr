@@ -1,0 +1,7 @@
+sonarr_url = "http://your_sonarr_url"
+radarr_url = "http://your_radarr_url"
+lidarr_url = "http://your_lidarr_url"
+
+sonarr_api_key = ""
+radarr_api_key = ""
+lidarr_api_key = ""
