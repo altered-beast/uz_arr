@@ -1,5 +1,4 @@
-use axum::{routing::get, routing::post, Extension, Json, Router};
-#[allow(unused_imports)]
+use axum::{routing::get, Extension, Json, Router};
 use axum_macros::debug_handler;
 use config::Config;
 use reqwest::Client;
@@ -13,7 +12,6 @@ use tokio;
 async fn main() {
     // load configuration from ./config.toml
     let config: Configuration = Config::builder()
-        // Add in settings from `./config.toml`
         .add_source(config::File::with_name("config.toml"))
         .build()
         .unwrap()
@@ -23,7 +21,7 @@ async fn main() {
     //  make sure to reuse this for performance instead of re instantiating
     let client = reqwest::Client::new();
 
-    // gives handles acces to config values via Extension as an extractor
+    // gives handlers acces to config values via Extension as an extractor
     let shared_state = Arc::new(State {
         config: config,
         client: client,
@@ -37,14 +35,17 @@ async fn main() {
         config: Configuration,
         search_phrase: String,
     ) -> Result<SonarrResponse, reqwest::Error> {
+        let request_url = format!("{}/api/series/lookup", config.sonarr_url);
+
+        let request = format!(
+            "{}?term={}&apikey={}",
+            request_url,
+            search_phrase.replace(" ", "%20"),
+            config.sonarr_api_key
+        );
+
         let response = client
-            //TODO: refactor the building of url and search term for better understanding
-            .get(format!(
-                "{}/api/series/lookup?term={}&apikey={}",
-                config.sonarr_url,
-                search_phrase.replace(" ", "%20"),
-                config.sonarr_api_key
-            ))
+            .get(request)
             .send()
             .await?
             // desirialise the json response into SonarrResponse
